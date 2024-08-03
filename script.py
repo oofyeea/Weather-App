@@ -9,17 +9,24 @@ from PIL import Image, ImageTk
 def get_time(): # logic for converting from GMT to EST
     hour = time.gmtime().tm_hour - 4
     min = time.gmtime().tm_min
+    min_str = ''
+    if min < 10:
+        min_str = f'0{min}'
+    else: 
+        min_str = f'{min}'
     current_time = ''
     if hour == 0:
-        current_time = f'12:{min} AM'
-    if hour < 0:
+        current_time = f'12:{min_str} AM'
+    elif hour < 0:
         hour = 12 + hour # since hour is negative when converted to est, it is just before midnight so this converts it to a positive value
-        current_time = f'{hour}:{min} PM'
+        current_time = f'{hour}:{min_str} PM'
+    elif hour == 12:
+        current_time = f'12:{min_str} PM'
     elif hour > 12: 
         hour -= 12
-        current_time = f'{hour}:{min} PM'
+        current_time = f'{hour}:{min_str} PM'
     else:
-        current_time = f'{hour}:{min} AM'
+        current_time = f'{hour}:{min_str} AM'
     return current_time
 
 def set_weather_icon(id):
@@ -48,19 +55,16 @@ def set_weather_data():
     set_weather_icon(data["icon"])
     time_label.configure(text=f'Time: {get_time()} EST')
     location_label.configure(text=f'{data["city"]}, {data["country"]}')
-    temp.configure(text=f'Temperature: {data["temp"]}° F')
-    feels_like.configure(text=f'Feels like: {data["feels_like"]}° F')
+    temp.configure(text=f'Temperature: {round(float(data["temp"]))}° F')
+    feels_like.configure(text=f'Feels like: {round(float(data["feels_like"]))}° F')
     desc.configure(text=f'Description: {data["description"]}')
-    wind.configure(text=f'Wind speed: {data["wind"]}')
+    wind.configure(text=f'Wind speed: {round(float(data["wind"]))} MPH')
     
 def show_weather():
     search_instruction.pack(pady=(30,5))
     city_entry.pack(pady=5)
     get_weather.pack(pady=5)
     set_weather_data()
-    
-
-    
     
 api_key = open('api_key.txt',mode='r').readline()
         
