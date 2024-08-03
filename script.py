@@ -5,7 +5,6 @@ import ttkbootstrap as ttk
 import time
 from PIL import Image, ImageTk
 
-
 def get_time(): # logic for converting from GMT to EST
     hour = time.gmtime().tm_hour - 4
     min = time.gmtime().tm_min
@@ -60,10 +59,12 @@ def set_weather_data():
     desc.configure(text=f'Description: {data["description"]}')
     wind.configure(text=f'Wind speed: {round(float(data["wind"]))} MPH')
     
-def show_weather():
+    # move the search info to the top of the screen to display the data about weather
     search_instruction.pack(pady=(30,5))
     city_entry.pack(pady=5)
     get_weather.pack(pady=5)
+    
+def show_weather():
     set_weather_data()
     
 api_key = open('api_key.txt',mode='r').readline()
